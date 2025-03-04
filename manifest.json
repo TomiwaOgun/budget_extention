@@ -1,0 +1,28 @@
+{
+    "manifest_version": 3,
+    "name": "Budget Garden",
+    "version": "1.0",
+    "description": "A Chrome extension for impulse buying. Icons by charlie on freeicons.io",
+    "permissions": [
+      "storage",
+      "tabs",
+      "activeTab",
+      "scripting"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": {
+        "16": "icons/leafIcon-16.png",
+        "48": "icons/leafIcon-48.png",
+        "128": "icons/leafIcon-128.png"
+      }
+    },
+    "icons": {
+        "16": "icons/leafIcon-16.png",
+        "48": "icons/leafIcon-48.png",
+        "128": "icons/leafIcon-128.png"
+    }
+  }
