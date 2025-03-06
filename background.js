@@ -9,7 +9,7 @@ chrome.runtime.onInstalled.addListener(() => {
 // Listen for tab updates to check if the user is on an order confirmation page
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status === 'complete' && tab.url) {
-        if (tab.url.includes('/thankyou')||tab.url.includes('gp/css/order-history')) {
+        if (tab.url.includes('/thankyou')||tab.url.includes('gp/css/order-history')||tab.url.includes('bgt_payment_success.html')||tab.url.includes('/bgt_orders.html')) {
             console.log("Order confirmation page detected. Injecting content.js...");
 
             // Inject the content script to extract the total amount
