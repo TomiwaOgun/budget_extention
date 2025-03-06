@@ -26,8 +26,13 @@ setBudgetButton.addEventListener('click', () => {
     alert('Please enter a valid number for your budget.');
     return;
   }
+  if (budget < 0) {
+    alert('Budget cannot be negative.');
+    return;
+  }
   chrome.storage.sync.set({ budget, totalSpent }); // Save budget to Chrome storage
   updateUI();
+  budgetInput.value = ''; // Clear the input field
 });
 
 resetBudgetButton.addEventListener('click', () => {
@@ -65,6 +70,23 @@ transferToGameButton.addEventListener('click', () => {
   }
 });
 
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "updateUI") {
+      updateUI();
+  }
+});
+
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  if (changes.totalSpent) {
+      console.log("Total spent changed from", changes.totalSpent.oldValue, "to", changes.totalSpent.newValue);
+      updateUI(); // Update the popup UI
+  }
+  if (changes.budget) {
+      console.log("Budget changed from", changes.budget.oldValue, "to", changes.budget.newValue);
+      updateUI(); // Update the popup UI
+  }
+});
+
 // Update the UI
 function updateUI() {
     console.log('Updating UI'); // Debugging
@@ -75,7 +97,12 @@ function updateUI() {
     remainingBudgetDisplay.textContent = `$${remainingBudget.toFixed(2)}`;
     totalSpentDisplay.textContent = `$${totalSpent.toFixed(2)}`;
     leftoverDisplay.textContent = `$${(budget - totalSpent).toFixed(2)}`;
+
+    // Handle negative budget
+    if (remainingBudget < 0) {
+      remainingBudgetDisplay.style.color = 'red'; // Highlight in red
+    } else {
+      remainingBudgetDisplay.style.color = ''; // Reset color
+    }
    
- // Save updated values to Chrome storage (Use sync consistently)
-    chrome.storage.sync.set({ budget, totalSpent });
 }
