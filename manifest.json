@@ -9,6 +9,11 @@
       "activeTab",
       "scripting"
     ],
+    "host_permissions": [
+      "https://www.amazon.ca/*",
+      "https://www.amazon.com/*",
+      "https://www.temu.com/*"
+    ],
     "background": {
       "service_worker": "background.js"
     },

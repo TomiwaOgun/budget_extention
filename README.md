@@ -1,5 +1,5 @@
 Budget Garden - Chrome Extension
-Budget Garden is a Chrome extension designed to help users track their spending and manage their budget effectively. It automatically detects when a purchase is made on an order confirmation page and saves the total amount spent. Users can also manually add expenses, set a weekly budget, and track their remaining budget.
+Budget Garden is a Chrome extension designed to help users track their spending and manage their budget effectively. It automatically detects when a purchase is made on an order confirmation page and saves the total amount spent. Users can also manually add expenses, set a weekly budget, and track their remaining budget. Currently only owrks on amozon andd temu.
 
 Features
 Automatic Spending Tracking: Detects purchases on order confirmation pages and saves the total amount spent. (in progress!)
