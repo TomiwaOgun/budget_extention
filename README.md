@@ -32,7 +32,7 @@ Set your weekly budget and start tracking your spending!
 
 How to Use
 Automatic Spending Tracking
-When you complete a purchase on a website, the extension will automatically detect the order confirmation page and save the total amount spent. (in progress!)
+When you complete a purchase on a website, the extension will automatically detect the order confirmation page and save the total amount spent. (It should work for amazon now)
 
 Manual Expense Entry
 Open the Budget Garden popup.
