@@ -57,16 +57,19 @@ addSpentButton.addEventListener('click', () => {
 
 // Transfer leftover money to the game
 transferToGameButton.addEventListener('click', () => {
-    const leftover = budget - totalSpent;
-    if (leftover > 0) {
+  const leftover = budget - totalSpent;
+  if (leftover > 0) {
       alert(`Transferred $${leftover} to your game!`);
       // Reset spending and budget
       totalSpent = 0;
       budget = 0;
       chrome.storage.sync.set({ totalSpent, budget });
       updateUI();
+
+      // Send the leftover amount to the game
+      chrome.runtime.sendMessage({ action: "transferToGame", amount: leftover });
   } else {
-    alert('No leftover money to transfer!');
+      alert('No leftover money to transfer!');
   }
 });
 
