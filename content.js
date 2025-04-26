@@ -8,7 +8,7 @@ function isOrderConfirmationPage() {
     console.log("Current URL:", url); // Log the URL for debugging
 
     // Check for Amazon confirmation page
-    const isAmazonConfirmation = url.includes('/checkout') || url.includes('/thankyou');
+    const isAmazonConfirmation = url.includes('/checkout') || url.includes('/thankyou') || url.includes('/order-history');
 
     // Check for Temu confirmation page
     const isTemuConfirmation = url.includes('bgt_payment_success.html');
@@ -18,7 +18,7 @@ function isOrderConfirmationPage() {
 
 function isAmazon() {
     const url = window.location.href;
-    console.log("Current URL:", url); // Log the URL for debugging
+    console.log("Current URL:", url); // Log the URL for debuggingS
     return url.includes('amazon.ca') || url.includes('amazon.com');
 }
 
@@ -44,13 +44,23 @@ function isOrderHistoryPageTemu() {
 
 function extractFromOrderHistoryAmazon(){
     console.log("extracting total price from order history...");
-    const priceElement = document.querySelector(".a-column.a-span2.yohtmlc-order-total .a-row.a-size-base span");
-    if (priceElement) {
-        console.log("price element found");
+    // Select all instances of the price element
+    const priceElements = document.querySelectorAll("div.a-row > span.a-size-base.a-color-secondary.aok-break-word");
+    
+    // Select the second instance (index 1)
+    const priceElement = priceElements[1]; // Second instance is at index 1
+    
+    const nameElement = document.querySelector(".a-row .yohtmlc-product-title a.a-link-normal");
+    if (priceElement && nameElement) {
+        console.log("price element and name element found");
+        // Debugging: log the price and name elements
+        console.log("Price Text:", priceElement.textContent);
+        console.log("Product Name:", nameElement.textContent);
         // Remove currency symbols and commas, then parse as a number
         const priceAmount = parseFloat(priceElement.textContent.replace(/[^0-9.]/g, ''));
+        const itemName = nameElement.textContent.trim();
         if (!isNaN(priceAmount)) {
-            return priceAmount;
+            return { price: priceAmount, name: itemName, store: "Amazon" };
         } else {
             console.error("Failed to parse price:", priceElement.textContent);
         }
@@ -71,7 +81,7 @@ function extractFromOrderHistoryTemu(){
         const priceAmount = parseFloat(priceElement.textContent.replace(/[^0-9.]/g, ''));
         if (!isNaN(priceAmount)) {
             console.log("Price amount parsed:", priceAmount);
-            return priceAmount;
+            return { price: priceAmount, name: "", store: "Temu" };
         } else {
             console.error("Failed to parse price:", priceElement.textContent);
         }
@@ -103,6 +113,26 @@ function saveTotalAmount(amount) {
     });
 }
 
+// Save the total amount to Chrome storage
+function saveList(orderDetails) {
+    chrome.storage.sync.get(['spentList'], (data) => {
+        if (chrome.runtime.lastError) {
+            console.error("Error retrieving spent list:", chrome.runtime.lastError);
+            return;
+        }
+
+        const spentList = data.spentList || [];
+        spentList.push(orderDetails);
+        chrome.storage.sync.set({ spentList }, () => {
+            if (chrome.runtime.lastError) {
+                console.error("Error saving spent list:", chrome.runtime.lastError);
+                return;
+            }
+            console.log("Spent List saved:", spentList);
+            chrome.runtime.sendMessage({ action: "updateUI" });
+        });
+    });
+}
 
 function redirectToOrderHistoryAmazon(){
     console.log("Redirecting to order history...");
@@ -148,9 +178,12 @@ if (isOrderHistoryPageAmazon()) {
     chrome.storage.local.get(['redirectedFromConfirmation'], (data) => {
         if (data.redirectedFromConfirmation) {
             console.log("Redirected from confirmation page. Extracting total...");
-            const price = extractFromOrderHistoryAmazon();
-            if (price) {
+            const orderDetails = extractFromOrderHistoryAmazon();
+            if (orderDetails) {
+                const price = orderDetails.price;
+                
                 saveTotalAmount(price);
+                saveList(orderDetails);
             }
             // Reset the flag after processing
             chrome.storage.local.set({ redirectedFromConfirmation: false });
@@ -165,9 +198,11 @@ else if (isOrderHistoryPageTemu()) {
     chrome.storage.local.get(['redirectedFromConfirmation'], (data) => {
         if (data.redirectedFromConfirmation) {
             console.log("Redirected from confirmation page. Extracting total...");
-            const price = extractFromOrderHistoryTemu();
-            if (price) {
+            const orderDetails = extractFromOrderHistoryTemu();
+            if (orderDetails) {
+                const price = orderDetails.price;
                 saveTotalAmount(price);
+                saveList(orderDetails);
             }
             // Reset the flag after processing
             chrome.storage.local.set({ redirectedFromConfirmation: false });
