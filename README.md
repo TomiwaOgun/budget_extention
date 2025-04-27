@@ -1,5 +1,5 @@
 Budget Garden - Chrome Extension
-Budget Garden is a Chrome extension designed to help users track their spending and manage their budget effectively. It automatically detects when a purchase is made on an order confirmation page and saves the total amount spent. Users can also manually add expenses, set a weekly budget, and track their remaining budget. Currently only owrks on amozon andd temu.
+Budget Garden is a Chrome extension designed to help users track their spending and manage their budget effectively. It automatically detects when a purchase is made on an order confirmation page and saves the total amount spent. Users can also manually add expenses, set a weekly budget, and track their remaining budget. Currently only works on amozon and temu.
 
 Features
 Automatic Spending Tracking: Detects purchases on order confirmation pages and saves the total amount spent. (in progress!)
@@ -12,7 +12,7 @@ Leftover Calculation: Calculates the leftover money after expenses.
 
 Reset Budget: Reset the budget and total spent at any time.
 
-Transfer to Game: Simulate transferring leftover money to a game (for fun!). (in progress!)
+Tracks purchases made from amazon and temu as well as manual entries.
 
 Installation
 Step 1: Download the Extension
@@ -51,8 +51,6 @@ Click Set Budget to save your budget.
 Reset Budget
 Click Reset Budget to reset your weekly budget and total spent to zero.
 
-Transfer Leftover Money to Game
-If you have leftover money in your budget, click Transfer to Game to simulate transferring the amount to a game. (in progress!)
 
 Files in the Extension
 content.js: Detects order confirmation pages and extracts the total amount spent.

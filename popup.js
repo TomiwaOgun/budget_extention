@@ -8,7 +8,6 @@ const manualSpentInput = document.getElementById('manualSpent');
 const manualItemInput = document.getElementById('manualItem');
 const manualStoreInput = document.getElementById('manualStoreName');
 const addSpentButton = document.getElementById('addSpent')
-const transferToGameButton = document.getElementById('transferToGame');
 const resetBudgetButton = document.getElementById('resetBudget');
 const displaySpentList = document.getElementById('spentList');
 const spentListButton = document.getElementById('toggle-spent');
@@ -69,23 +68,6 @@ addSpentButton.addEventListener('click', () => {
     manualSpentInput.value = '';
   });
 
-// Transfer leftover money to the game
-transferToGameButton.addEventListener('click', () => {
-  const leftover = budget - totalSpent;
-  if (leftover > 0) {
-      alert(`Transferred $${leftover} to your game!`);
-      // Reset spending and budget
-      totalSpent = 0;
-      budget = 0;
-      chrome.storage.sync.set({ totalSpent, budget });
-      updateUI();
-
-      // Send the leftover amount to the game
-      chrome.runtime.sendMessage({ action: "transferToGame", amount: leftover });
-  } else {
-      alert('No leftover money to transfer!');
-  }
-});
 
 spentListButton.addEventListener('click', () => {
   isVisible = !isVisible;
